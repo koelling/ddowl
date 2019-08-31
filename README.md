@@ -106,3 +106,11 @@ PDF file with phasing plots, named `SAMPLES_PATH.phasing.pdf`
         '/t1-data/user/koelling/nanopore/samples_run180519b_rerun.csv' \
         '/t1-data/user/bernkopf/180520_MinION/snps_%s.txt' \
     ;
+
+# Citation and License
+Licensed under the Apache License, version 2.0.
+Copyright 2019 Nils Koelling.
+When you use ddOWL, please cite it in your work. For example:
+
+> Koelling, Nils. "ddOWL: Detection of DNM Origin With Long Reads". https://github.com/koelling/ddowl/
+
