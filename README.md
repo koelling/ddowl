@@ -22,19 +22,20 @@ Requires Python 3 with pandas + pysam.
 To run the phaser script you need to provide three parameters:
 
 ### Path to samples table CSV
-This comma-separated file specifies the families that should be analysed. Each family should consist of mother, father and proband. If only proband data is available the mother and father can be left out, but then the origin of SNP alleles cannot be determined automatically.
+This comma-separated file specifies the families that should be analysed.
+Each family should consist of mother, father and proband. If only proband data is available the mother and father can be left out, but then the origin of SNP alleles cannot be determined automatically.
 
-Example: `examples/samples.csv`
-
-#### Columns:
+#### Samples CSV columns:
 - BC (sample barcode, must match barcode in BAM filename)
 - FamilyID (must be the same for all members of a family)
 - relationship (mother/father/proband)
 
-### Filename mask for variant TSV files
-For each family there must be a tab-separated TSV file that provides the location and alleles of the variants/SNPs in the sequenced region. File names need to contain the family ID but must otherwise be exactly the same. The filename mask has to contain the characters `%s`, which will be replaced by the family ID (column FamilyID in sample table).
+#### Example
+`examples/samples.csv`
 
-Example: `examples/snps_%s.tsv`
+### Filename mask for variant TSV files
+For each family we need to provide a tab-separated TSV file that provides the location and alleles of the variants/SNPs in the sequenced region.
+The format of this file is the same as the first five columns of a VCF file.
 
 In each of these files there should also be exactly one variant that represents the mutation in that family.
 For this entry, the `ID` column has to say "mutation", the `REF` allele is the wild-type allele and the `ALT` allele is the mutation allele.
@@ -42,18 +43,27 @@ For this entry, the `ID` column has to say "mutation", the `REF` allele is the w
 (untested:) Deletions can be specified like in VCF format - as a variant at the preceding position where REF is the preceding base plus the deleted sequence and ALT is just the preceding base.
 Eg. a "CT" deletion at position 10000029-10000030 preceded by an A at 10000028 would be specified as a variant at position 10000028 with alleles ref="ACT" and alt="A".
 
-#### Columns:
+File names need to contain the family ID but must otherwise be exactly the same.
+The filename mask has to contain the characters `%s`, which will be replaced by the family ID (column FamilyID in sample table).
+For example, if the files are called `examples/snps_FAM001.tsv` and `examples/snps_FAM002.tsv`, where FAM001 and FAM002
+are the family IDs, then the filename mask parameter should be set to `examples/snps_%s.tsv`.
+
+#### Variant TSV columns
 - `#CHROM` (chromosome, must match naming scheme in BAM)
 - `POS` (one-based coordinates)
 - `ID` (any ID)
 - `REF` (ref allele)
 - `ALT` (alt allele)
 
+#### Examples
+- `examples/snps_FAM001.tsv`
+- `examples/snps_FAM002.tsv`
+
 ### Filename mask for BAM files
 For each individual there must be a sorted BAM file with their aligned reads (for example generated with minimap2).
 The filename mask has to contain the characters `%s`, which will be replaced by the sample barcode (column BC in sample table).
 
-Example: `/insert/path/to/bam/files/here/%s.sorted.bam`
+For example, if the files are called `/insert/path/to/bam/files/here/BC01.sorted.bam`, `/insert/path/to/bam/files/here/BC02.sorted.bam` and so on then the filename mask parameter should be set to  `/insert/path/to/bam/files/here/%s.sorted.bam`.
 
 ### Additional parameters
 Run `python phaser.py --help` to see additional parameters.
