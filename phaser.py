@@ -403,7 +403,7 @@ def main():
     parser.add_argument("--debug", help="enable debug output", action="store_true")
     parser.add_argument("--family", help="specifiv family to run")
     parser.add_argument("FAMILIES", help="CSV file with family info")
-    parser.add_argument("SNPS", help="mask for SNP CSV filenames (%s replaced by family ID)")
+    parser.add_argument("SNPS", help="mask for SNP TSV filenames (%s replaced by family ID)")
     parser.add_argument("BAMS", help="mask for BAM filenames (%s replaced by sample ID)")
     args = parser.parse_args()
 

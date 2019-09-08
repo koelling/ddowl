@@ -22,19 +22,19 @@ Requires Python 3 with pandas + pysam.
 To run the phaser script you need to provide three parameters:
 
 ### Path to samples table CSV
-This file specifies the families that should be analysed. Each family should consist of mother, father and proband. If only proband data is available the mother and father can be left out, but then the origin of SNP alleles cannot be determined automatically.
+This comma-separated file specifies the families that should be analysed. Each family should consist of mother, father and proband. If only proband data is available the mother and father can be left out, but then the origin of SNP alleles cannot be determined automatically.
 
-Example: `/t1-data/user/bernkopf/180520_MinION/samples_run180519.csv`
+Example: `examples/samples.csv`
 
 #### Columns:
 - BC (sample barcode, must match barcode in BAM filename)
 - FamilyID (must be the same for all members of a family)
 - relationship (mother/father/proband)
 
-### Filename mask for variant CSV files
-For each family there must be a CSV file that provides the location and alleles of the variants/SNPs in the sequenced region. File names need to contain the family ID but must otherwise be exactly the same. The filename mask has to contain the characters `%s`, which will be replaced by the family ID (column FamilyID in sample table).
+### Filename mask for variant TSV files
+For each family there must be a tab-separated TSV file that provides the location and alleles of the variants/SNPs in the sequenced region. File names need to contain the family ID but must otherwise be exactly the same. The filename mask has to contain the characters `%s`, which will be replaced by the family ID (column FamilyID in sample table).
 
-Example: `/t1-data/user/bernkopf/180520_MinION/snps_%s.txt`
+Example: `examples/snps_%s.tsv`
 
 In each of these files there should also be exactly one variant that represents the mutation in that family.
 For this entry, the `ID` column has to say "mutation", the `REF` allele is the wild-type allele and the `ALT` allele is the mutation allele.
@@ -53,7 +53,7 @@ Eg. a "CT" deletion at position 10000029-10000030 preceded by an A at 10000028 w
 For each individual there must be a sorted BAM file with their aligned reads (for example generated with minimap2).
 The filename mask has to contain the characters `%s`, which will be replaced by the sample barcode (column BC in sample table).
 
-Example: `/t1-data/user/bernkopf/180520_MinION/%s.sorted.bam`
+Example: `/insert/path/to/bam/files/here/%s.sorted.bam`
 
 ### Additional parameters
 Run `python phaser.py --help` to see additional parameters.
@@ -66,16 +66,16 @@ Informative SNPs, allele counts, read stats, phase evidence, etc
 
     module purge && module load python3-cbrg/201703
     python phaser.py \
-        '/t1-data/user/koelling/nanopore/samples_run180519b_rerun.csv' \
-        '/t1-data/user/bernkopf/180520_MinION/snps_%s.txt' \
-        '/t1-data/user/bernkopf/180520_MinION/minimap2-aligned/bam/%s.sorted.bam' \
+        'examples/samples.csv' \
+        'examples/snps_%s.tsv' \
+        '/insert/path/to/bam/files/here/%s.sorted.bam' \
     ;
 
 # phaser.r
 R script to load CSV files from phaser.py and make heatmap plots for each SNP etc.
 
 ## Input
-To run the phaser script you need to provide two parameters - the sample table and the variant CSV filename mask, as described above.
+To run the phaser script you need to provide two parameters - the sample CSV and the variant TSV filename mask, as described above.
 Run `Rscript phaser.r --help` to see additional parameters.
 
 ## Output
@@ -85,15 +85,15 @@ PDF files with various plots (such as the heatmaps) and CSV files with summary d
 
     module purge && module load R/3.3.1-newgcc
     Rscript phaser.r \
-        '/t1-data/user/koelling/nanopore/samples_run180519b_rerun.csv' \
-        '/t1-data/user/bernkopf/180520_MinION/snps_%s.txt' \
+        'examples/samples.csv' \
+        'examples/snps_%s.tsv' \
     ;
 
 # phaser_call.r
 R script to load CSV files from phaser.py and do advanced statistical analysis (combining data from multiple SNPs, p-values, etc)
 
 ## Input
-To run the phaser script you need to provide two parameters - the sample table and the SNP filename mask, as described above.
+To run the phaser script you need to provide two parameters - the sample CSV and the variant TSV filename mask, as described above.
 Run `Rscript phaser_call.r --help` to see additional parameters.
 
 ## Output
@@ -103,8 +103,8 @@ PDF file with phasing plots, named `SAMPLES_PATH.phasing.pdf`
 
     module purge && module load R/3.3.1-newgcc
     Rscript phaser_call.r \
-        '/t1-data/user/koelling/nanopore/samples_run180519b_rerun.csv' \
-        '/t1-data/user/bernkopf/180520_MinION/snps_%s.txt' \
+        'examples/samples.csv' \
+        'examples/snps_%s.tsv' \
     ;
 
 # Citation and License
@@ -113,4 +113,3 @@ Copyright 2019 Nils Koelling.
 When you use ddOWL, please cite it in your work. For example:
 
 > Koelling, Nils. "ddOWL: Detection of DNM Origin With Long Reads". https://github.com/koelling/ddowl/
-

@@ -1,0 +1,8 @@
+BC,FamilyID,relationship
+BC01,FAM001,proband
+BC04,FAM002,mother
+BC05,FAM002,father
+BC06,FAM002,proband
+BC07,FAM003,mother
+BC08,FAM003,father
+BC09,FAM003,proband
